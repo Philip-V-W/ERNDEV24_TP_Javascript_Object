@@ -1,0 +1,24 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+#app {
+    background-color: #242424;
+}
+
+#map {
+    height: 100vh;
+    width: 100vw;
+}
+
+#formField {
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    top: 25px;
+    right: 25px;
+}
