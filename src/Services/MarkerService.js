@@ -1,8 +1,32 @@
-const STORAGE_MARKER = 'marker'; // nom utilisé pour stocker les notes dans le localStorage
+const STORAGE_MARKER = 'elForm'; // nom utilisé pour stocker les notes dans le localStorage
 
 class MarkerService {
 
-    readStorage() {
+    // méthode pour sauvegarder les notes dans le localStorage
+    static saveStorageData() {
+        const formData = {
+            titre: document.getElementById('titre').value,
+            description: document.getElementById('description').value,
+            startDate: document.getElementById('start-date').value,
+            endDate: document.getElementById('end-date').value,
+            latitude: document.getElementById('latitude').value,
+            longitude: document.getElementById('longitude').value
+        };
+
+        let existingData = JSON.parse(localStorage.getItem(STORAGE_MARKER)) || [];
+        existingData.push(formData);
+
+        try {
+            localStorage.setItem(STORAGE_MARKER, JSON.stringify(existingData));
+        } catch (error) {
+            console.error('Erreur lors de la sauvegarde des données dans le localStorage', error);
+        }
+
+        // return might be false
+        return formData;
+    }
+
+   static readStorageData() {
         let arrMarkers = [];
 
         const serializedData = localStorage.getItem(STORAGE_MARKER);
@@ -19,21 +43,6 @@ class MarkerService {
 
         return arrMarkers;
     }
-
-    // méthode pour sauvegarder les notes dans le localStorage
-    saveStorage(arrMarkers) {
-        const serializedData = JSON.stringify(arrMarkers);
-
-        try {
-            localStorage.setItem(STORAGE_MARKER, serializedData);
-        } catch (error) {
-            console.error('Erreur lors de la sauvegarde des données dans le localStorage', error);
-        }
-
-        return false;
-    }
-
-
 }
 
 export default MarkerService;

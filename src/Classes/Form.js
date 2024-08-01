@@ -22,28 +22,6 @@ class Form {
         return this.elForm;
     }
 
-    // méthode qui sauvegarde les données du formulaire
-   static saveFormData() {
-        localStorage.setItem('titre', document.getElementById('titre').value);
-        localStorage.setItem('description', document.getElementById('description').value);
-        localStorage.setItem('start-date', document.getElementById('start-date').value);
-        localStorage.setItem('end-date', document.getElementById('end-date').value);
-        localStorage.setItem('latitude', document.getElementById('latitude').value);
-        localStorage.setItem('longitude', document.getElementById('longitude').value);
-    }
-
-
-    // méthode qui récupère les données du formulaire
-    getFormData() {
-        return {
-            titre: localStorage.getItem('titre'),
-            description: localStorage.getItem('description'),
-            startDate: localStorage.getItem('start-date'),
-            endDate: localStorage.getItem('end-date'),
-            coordinates: localStorage.getItem('coordinates')
-        }
-    }
-
 }
 
 export default Form;
