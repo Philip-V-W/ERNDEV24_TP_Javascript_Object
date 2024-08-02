@@ -33,6 +33,8 @@ class App {
     markers = [];
     tempMarker;
 
+    markerData
+
 
     start() {
         console.log('App started');
@@ -128,6 +130,7 @@ class App {
             .setLngLat(this.lngLat)
             .addTo(this.map);
 
+
         // on affiche les coordonnées dans la console
         console.log('Coordinates:', (coordinates));
     }
@@ -137,6 +140,8 @@ class App {
             this.marker = this.tempMarker;
             this.tempMarker = null;
         }
+
+        location.reload();
     }
 
     removeTempMarker() {
@@ -153,11 +158,57 @@ class App {
         });
 
         this.markers.forEach(marker => {
-            marker.getElement().addEventListener('mouseenter', () => {
-                const markerData = this.markerService.find(m => m.latitude == marker.getLngLat().lat && m.longitude == marker.getLngLat().lng);
-                if (markerData) {
+            const markerElement = marker.getElement();
+
+            markerElement.addEventListener('mouseenter', () => {
+                this.markerData = this.markerService.find(m =>
+                    m.latitude == marker.getLngLat().lat &&
+                    m.longitude == marker.getLngLat().lng);
+                if (this.markerData) {
                     popup.setLngLat(marker.getLngLat())
-                        .setHTML(`<h3>${markerData.titre}</h3><p>${markerData.startDate}</p><p>${markerData.endDate}</p>`)
+                        .setHTML(`<div id="divpopup"><h3>${this.markerData.titre}</h3>
+                                    <p>${this.markerData.startDate}</p><p>${this.markerData.endDate}</p></div>`)
+                        .addTo(this.map);
+                }
+            });
+
+            markerElement.addEventListener('mouseleave', () => {
+                popup.remove();
+            });
+
+            markerElement.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent event bubbling if necessary
+                this.markerData = this.markerService.find(m =>
+                    m.latitude == marker.getLngLat().lat &&
+                    m.longitude == marker.getLngLat().lng);
+                if (this.markerData) {
+                    popup.setLngLat(marker.getLngLat())
+                        .setHTML(`<h3>${this.markerData.titre}</h3><p>${this.markerData.startDate}</p>
+                                    <p>${this.markerData.endDate}</p><p>${this.markerData.description}</p>
+                                    <p>${this.markerData.latitude}</p><p>${this.markerData.longitude}</p>
+                                `)
+                        .addTo(this.map);
+                }
+            });
+        });
+    }
+
+
+    displayMarkerDatas() {
+        const popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+        });
+
+        this.markers.forEach(marker => {
+            marker.getElement().addEventListener('mouseenter', () => {
+                this.markerData = this.markerService.find(m =>
+                    m.latitude == marker.getLngLat().lat &&
+                    m.longitude == marker.getLngLat().lng);
+                if (this.markerData) {
+                    popup.setLngLat(marker.getLngLat())
+                        .setHTML(`<div id="divpopup"><h3>${this.markerData.titre}</h3>
+                                    <p>${this.markerData.startDate}</p><p>${this.markerData.endDate}</p></div>`)
                         .addTo(this.map);
                 }
             });
@@ -165,55 +216,20 @@ class App {
             marker.getElement().addEventListener('mouseleave', () => {
                 popup.remove();
             });
-        });
 
-        this.markers.forEach(marker => {
             marker.getElement().addEventListener('click', () => {
-                const markerData = this.markerService.find.readStorageData();
-
-                });
+                this.markerData = this.markerService.find(m =>
+                    m.latitude == marker.getLngLat().lat &&
+                    m.longitude == marker.getLngLat().lng);
+                if (this.markerData) {
+                    popup.setLngLat(marker.getLngLat())
+                        .setHTML(`<h3>${this.markerData.titre}</h3><p>${this.markerData.startDate}</p>
+                                    <p>${this.markerData.endDate}</p><p>${this.markerData.description}</p>`)
+                        .addTo(this.map);
+                }
             });
-
-
+        });
     }
-
-
-
-    // méthode qui affiche les données du marker
-    // displayMarkerData() {
-    //     // Create a popup, but don't add it to the map yet.
-    //     const popup = new mapboxgl.Popup({
-    //         closeButton: false,
-    //         closeOnClick: false
-    //     });
-    //
-    //     this.map.on('mouseenter', 'places', (e) => {
-    //         // Change the cursor style as a UI indicator.
-    //         this.map.getCanvas().style.cursor = 'pointer';
-    //
-    //         // Copy coordinates array.
-    //         const coordinates = e.features[0].geometry.coordinates.slice();
-    //         const description = e.features[0].properties.description;
-    //
-    //         // Ensure that if the this.map is zoomed out such that multiple
-    //         // copies of the feature are visible, the popup appears
-    //         // over the copy being pointed to.
-    //         if (['mercator', 'equirectangular'].includes(this.map.getProjection().name)) {
-    //             while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-    //                 coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-    //             }
-    //         }
-    //
-    //         // Populate the popup and set its coordinates
-    //         // based on the feature found.
-    //         popup.setLngLat(coordinates).setHTML(description).addTo(this.map);
-    //     });
-    //
-    //     this.map.on('mouseleave', 'places', () => {
-    //         this.map.getCanvas().style.cursor = '';
-    //         popup.remove();
-    //     });
-    // }
 
 
 }
