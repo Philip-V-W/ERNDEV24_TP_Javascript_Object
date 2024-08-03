@@ -1,7 +1,7 @@
 {
   "apis": {
     "mapbox_gl": {
-      "apiKey": "pk.eyJ1IjoicHJlZGF4aW8iLCJhIjoiY2x6Nng2NzdhMDIzZTJqczU0eDIwZndvaCJ9.F_2VHTzRTsVnaGTEmPrc2Q",
+      "apiKey": "",
       "css_url": "https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css",
       "map_styles": {
         "streets": "mapbox://styles/mapbox/streets-v12",
