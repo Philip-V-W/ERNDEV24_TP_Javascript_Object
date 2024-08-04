@@ -110,3 +110,14 @@
 .map-overlay-inner .select-fieldset select {
     width: 100%;
 }
+
+#mapSearch {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    z-index: 4;
+}
+

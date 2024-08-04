@@ -25,7 +25,7 @@ class Form {
 
     // Create the map overlay element
     static createMapSettings() {
-        this.elMapSettings = document.createElement('mapSettings');
+        this.elMapSettings = document.createElement('div');
         this.elMapSettings.className = 'map-overlay top';
         this.elMapSettings.innerHTML = `
             <div class="map-overlay-inner">
@@ -61,6 +61,21 @@ class Form {
             </div>
         `;
         return this.elMapSettings;
+    }
+
+    // Create the map search element
+    static createMapSearch() {
+        this.elMapSearch = document.createElement('div');
+        this.elMapSearch.id = 'mapSearch';
+        this.elMapSearch.innerHTML = `
+            <div class="map-overlay-inner card">
+                <div class="d-flex">
+                    <input id="search" class="form-control me-2" type="search" placeholder="Search for a place" aria-label="Search">
+                    <button id="searchButton" class="btn btn-success" type="submit">Search</button>
+                </div>
+            </div>
+        `;
+        return this.elMapSearch;
     }
 }
 

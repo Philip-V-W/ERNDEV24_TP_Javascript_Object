@@ -8,6 +8,8 @@ import '../assets/styles/style.css';
 import MarkerService from "../Services/MarkerService.js";
 import Form from "./Form.js";
 import Marker from "./Marker.js";
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 // Main application class
 class App {
@@ -27,6 +29,8 @@ class App {
         this.currentDate = null; // Current date
         this.daysDifference = null; // Difference in days between event date and current date
         this.mapSettings = null; // Map overlay element
+        this.mapSearch = null; // Map search element
+        this.geocoder = null; // Geocoder instance
     }
 
     // Start the application
@@ -75,6 +79,9 @@ class App {
         this.mapSettings = Form.createMapSettings(); // Create the map overlay
         app.appendChild(this.mapSettings); // Append the map overlay to the app container
 
+        this.mapSearch = Form.createMapSearch(); // Create the map search
+        app.appendChild(this.mapSearch); // Append the map search to the app container
+
         // Add event listener for the send button
         const sendButton = document.getElementById('sendButton');
         sendButton.addEventListener('click', (e) => {
@@ -96,6 +103,16 @@ class App {
         modifyButton.addEventListener('click', (e) => {
             e.preventDefault(); // Prevent default form submission
             Marker.modifyMarkerInfo(this); // Modify marker information
+        });
+
+        // Add event listener for the search button
+        const searchButton = document.getElementById('searchButton');
+        searchButton.addEventListener('click', () => {
+            const searchInput = document.getElementById('search');
+            const searchQuery = searchInput.value;
+
+            // Use the Mapbox Geocoding API to search for the place
+            this.geocoder.query(searchQuery);
         });
 
         // Add event listener for the map style select element
@@ -179,9 +196,21 @@ class App {
             center: [135.50440880239097, 34.648799335813635], // Initial map center coordinates
             zoom: 15 // Initial map zoom level
         });
+
+        // Create the geocoder control
+        this.geocoder = new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            mapboxgl: mapboxgl,
+            types: 'country,region,place,postcode,locality,neighborhood',
+            placeholder: 'Search for a place'
+        });
+
+        // Add the geocoder control to the map
+        this.map.addControl(this.geocoder);
+
         // Add navigation control to the map
         const nav = new mapboxgl.NavigationControl();
-        this.map.addControl(nav, 'top-left'); // Add navigation control to the top-left corner
+        this.map.addControl(nav, 'top-left'); // Add navigation control to the top-left corner TODO: + btn isn't working
 
         // Add click event listener to the map
         this.map.on('click', this.handleClickMap.bind(this)); // Bind the click event handler
