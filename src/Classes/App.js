@@ -1,5 +1,5 @@
 import config from '../../app.config.json';
-import mapboxgl, { LngLat } from 'mapbox-gl';
+import mapboxgl, {LngLat} from 'mapbox-gl';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -26,6 +26,7 @@ class App {
         this.eventDate = null; // Event date
         this.currentDate = null; // Current date
         this.daysDifference = null; // Difference in days between event date and current date
+        this.mapSettings = null; // Map overlay element
     }
 
     // Start the application
@@ -51,7 +52,7 @@ class App {
                     markerColor = 'red';
                 }
                 // Create and add marker to the map
-                const newMarker = new mapboxgl.Marker({ color: markerColor })
+                const newMarker = new mapboxgl.Marker({color: markerColor})
                     .setLngLat([marker.longitude, marker.latitude])
                     .addTo(this.map);
                 this.markers.push(newMarker);
@@ -71,6 +72,9 @@ class App {
         this.form = Form.createForm(); // Create the form
         app.appendChild(this.form); // Append the form to the app container
 
+        this.mapSettings = Form.createMapSettings(); // Create the map overlay
+        app.appendChild(this.mapSettings); // Append the map overlay to the app container
+
         // Add event listener for the send button
         const sendButton = document.getElementById('sendButton');
         sendButton.addEventListener('click', (e) => {
@@ -86,11 +90,83 @@ class App {
             const savedMarker = MarkerService.saveStorageData(formData); // Save marker data
             Marker.confirmMarker(this, savedMarker); // Confirm marker creation
         });
+
         // Add event listener for the modify button
         const modifyButton = document.getElementById('modifyButton');
         modifyButton.addEventListener('click', (e) => {
             e.preventDefault(); // Prevent default form submission
             Marker.modifyMarkerInfo(this); // Modify marker information
+        });
+
+        // Add event listener for the map style select element
+        const mapPreset = document.getElementById('mapStyle');
+        mapPreset.addEventListener('change', () => {
+            // Set the map style based on the selected preset
+            switch (mapPreset.value) {
+                case 'Streets':
+                    this.map.setStyle(config.apis.mapbox_gl.map_styles.streets);
+                    break;
+                case 'Outdoors':
+                    this.map.setStyle(config.apis.mapbox_gl.map_styles.outdoors);
+                    break;
+                case 'Light':
+                    this.map.setStyle(config.apis.mapbox_gl.map_styles.light);
+                    break;
+                case 'Dark':
+                    this.map.setStyle(config.apis.mapbox_gl.map_styles.dark);
+                    break;
+                case 'Satellite':
+                    this.map.setStyle(config.apis.mapbox_gl.map_styles.satellite);
+                    break;
+                case 'Satellite streets':
+                    this.map.setStyle(config.apis.mapbox_gl.map_styles.satellite_streets);
+                    break;
+                case 'Navigation day':
+                    this.map.setStyle(config.apis.mapbox_gl.map_styles.navigation_day);
+                    break;
+                case 'Navigation night':
+                    this.map.setStyle(config.apis.mapbox_gl.map_styles.navigation_night);
+                    break;
+            }
+            // Reset checkboxes to default checked state if mapPreset is changed
+            if (mapPreset.value !== 'Satellite') {
+                document.getElementById('showPointOfInterestLabels').checked = true;
+                document.getElementById('showRoadLabels').checked = true;
+                document.getElementById('showTransitLabels').checked = true;
+            }
+        });
+
+        // TODO: error msg: place-label does not exist
+        // Add event listener for the show place labels checkbox
+        // const showPlaceLabels = document.getElementById('showPlaceLabels');
+        // showPlaceLabels.addEventListener('change', () => {
+        //     // Show or hide place labels
+        //     const placeLabelsVisibility = showPlaceLabels.checked ? 'visible' : 'none';
+        //     this.map.setLayoutProperty('place-label', 'visibility', placeLabelsVisibility);
+        // });
+
+        // Add event listener for the show POI labels checkbox
+        const showPointOfInterestLabels = document.getElementById('showPointOfInterestLabels');
+        showPointOfInterestLabels.addEventListener('change', () => {
+            // Show or hide POI labels
+            const poiLabelsVisibility = showPointOfInterestLabels.checked ? 'visible' : 'none';
+            this.map.setLayoutProperty('poi-label', 'visibility', poiLabelsVisibility);
+        });
+
+        // Add event listener for the show road labels checkbox
+        const showRoadLabels = document.getElementById('showRoadLabels');
+        showRoadLabels.addEventListener('change', () => {
+            // Show or hide road labels
+            const roadLabelsVisibility = showRoadLabels.checked ? 'visible' : 'none';
+            this.map.setLayoutProperty('road-label', 'visibility', roadLabelsVisibility);
+        });
+
+        // Add event listener for the show transit labels checkbox
+        const showTransitLabels = document.getElementById('showTransitLabels');
+        showTransitLabels.addEventListener('change', () => {
+            // Show or hide transit labels
+            const transitLabelsVisibility = showTransitLabels.checked ? 'visible' : 'none';
+            this.map.setLayoutProperty('transit-label', 'visibility', transitLabelsVisibility);
         });
     }
 

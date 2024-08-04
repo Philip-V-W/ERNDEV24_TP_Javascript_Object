@@ -22,6 +22,46 @@ class Form {
         `;
         return this.elForm;
     }
+
+    // Create the map overlay element
+    static createMapSettings() {
+        this.elMapSettings = document.createElement('mapSettings');
+        this.elMapSettings.className = 'map-overlay top';
+        this.elMapSettings.innerHTML = `
+            <div class="map-overlay-inner">
+                <fieldset class="select-fieldset">
+                    <label>Select a map Style</label>
+                    <select id="mapStyle" name="mapPreset">
+                        <option value="Streets">Streets</option>
+                        <option value="Outdoors">Outdoors</option>
+                        <option value="Light">Light</option>
+                        <option value="Dark">Dark</option>
+                        <option value="Satellite">Satellite</option>
+                        <option value="Satellite streets" selected>Satellite Streets</option>
+                        <option value="Navigation day">Navigation Day</option>
+                        <option value="Navigation night">Navigation Night</option>
+                    </select>
+                </fieldset>
+            <!-- <fieldset> --> <!-- TODO: can't seem to get this to work -->
+                <!-- <label for="showPlaceLabels">Show place labels</label> -->
+                <!-- <input type="checkbox" id="showPlaceLabels" checked=""> -->
+            <!-- </fieldset> -->
+                <fieldset>
+                    <label for="showPointOfInterestLabels">Show POI labels</label>
+                    <input type="checkbox" id="showPointOfInterestLabels" checked="">
+                </fieldset>
+                <fieldset>
+                    <label for="showRoadLabels">Show road labels</label>
+                    <input type="checkbox" id="showRoadLabels" checked="">
+                </fieldset>
+                <fieldset>
+                    <label for="showTransitLabels">Show transit labels</label>
+                    <input type="checkbox" id="showTransitLabels" checked="">
+                </fieldset>
+            </div>
+        `;
+        return this.elMapSettings;
+    }
 }
 
 export default Form;
